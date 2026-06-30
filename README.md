@@ -1,0 +1,3 @@
+# StokTakip
+
+Stok Takip Projesi
