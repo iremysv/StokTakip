@@ -114,6 +114,25 @@
             </section>
         </main>
     </div>
+
+    <!-- Custom Confirmation Modal -->
+    <div id="custom-confirm-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Önemli İşlem Uyarısı</h3>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message">Bu ürünü silmek istediğinize emin misiniz?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-confirm-cancel" class="btn btn-secondary">İptal</button>
+                <button id="btn-confirm-ok" class="btn btn-danger">Sil</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container for beautiful notifications -->
+    <div id="toast-container"></div>
     
     <script src="app.js"></script>
 </body>

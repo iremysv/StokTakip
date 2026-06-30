@@ -89,6 +89,54 @@ function veriyiKaydet() {
     localStorage.setItem('envanter', JSON.stringify(envanter));
 }
 
+// Custom Modal & Toast DOM Elemanları
+const confirmModal = document.getElementById('custom-confirm-modal');
+const confirmMessage = document.getElementById('confirm-message');
+const btnConfirmCancel = document.getElementById('btn-confirm-cancel');
+const btnConfirmOk = document.getElementById('btn-confirm-ok');
+const toastContainer = document.getElementById('toast-container');
+
+let confirmCallback = null;
+
+// Özel Onay Penceresi (Confirm Modal) Gösterimi
+function gosterConfirm(mesaj, callback) {
+    confirmMessage.textContent = mesaj;
+    confirmCallback = callback;
+    confirmModal.classList.remove('hidden');
+}
+
+btnConfirmCancel.addEventListener('click', () => {
+    confirmModal.classList.add('hidden');
+    confirmCallback = null;
+});
+
+btnConfirmOk.addEventListener('click', () => {
+    confirmModal.classList.add('hidden');
+    if (confirmCallback) confirmCallback();
+    confirmCallback = null;
+});
+
+// Özel Bildirim (Toast Notification) Gösterimi
+function gosterToast(mesaj, tip = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${tip}`;
+    toast.innerHTML = `<span>${mesaj}</span>`;
+    toastContainer.appendChild(toast);
+    
+    // Animasyonla ekrana getirme
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+
+    // 3 saniye sonra kaldırma
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 3000);
+}
+
 // Formu Temizleme
 function formuTemizle() {
     form.reset();
@@ -115,14 +163,18 @@ function formuYukleById(id) {
     }
 }
 
-// Ürün Silme
+// Ürün Silme (Özel Onay Penceresi Entegre Edildi)
 window.urunSil = function(id) {
-    if (confirm("Bu ürünü silmek istediğinize emin misiniz?")) {
-        envanter = envanter.filter(urun => urun.id !== id);
+    const urun = envanter.find(u => u.id === id);
+    const urunAdi = urun ? urun.ad : 'bu ürünü';
+    
+    gosterConfirm(`"${urunAdi}" ürününü silmek istediğinize emin misiniz?`, () => {
+        envanter = envanter.filter(u => u.id !== id);
         veriyiKaydet();
         tabloyuCiz();
         formuTemizle();
-    }
+        gosterToast(`"${urunAdi}" başarıyla silindi.`, 'error');
+    });
 };
 
 // Form Gönderimi (Ekle / Güncelle)
@@ -140,11 +192,13 @@ form.addEventListener('submit', (e) => {
         const urunIndex = envanter.findIndex(u => u.id == id);
         if (urunIndex !== -1) {
             envanter[urunIndex] = { id: parseInt(id), ad, kategori, adet, fiyat };
+            gosterToast(`"${ad}" başarıyla güncellendi.`, 'success');
         }
     } else {
         // Ekleme Modu
         const yeniId = envanter.length > 0 ? Math.max(...envanter.map(u => u.id)) + 1 : 1;
         envanter.push({ id: yeniId, ad, kategori, adet, fiyat });
+        gosterToast(`"${ad}" envantere eklendi.`, 'success');
     }
 
     veriyiKaydet();
@@ -172,3 +226,4 @@ searchKategoriInput.addEventListener('input', () => {
 
 // İlk Başlangıç
 tabloyuCiz();
+
