@@ -141,7 +141,7 @@ class StokArayuzu:
             
         try:
             adet = int(adet_str)
-            fiyat = float(fiyat_str)
+            fiyat = float(fiyat_str.replace(",", "."))
             if adet < 0 or fiyat < 0:
                 raise ValueError("Değerler sıfırdan küçük olamaz.")
         except ValueError:

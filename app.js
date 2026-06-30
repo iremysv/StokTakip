@@ -185,7 +185,10 @@ form.addEventListener('submit', (e) => {
     const ad = urunAdInput.value.trim();
     const kategori = urunKategoriSelect.value;
     const adet = parseInt(urunAdetInput.value);
-    const fiyat = parseFloat(urunFiyatInput.value);
+    
+    // Virgül içeren ondalık sayıları noktaya çevirerek parse etme (Hata koruması)
+    const fiyatRaw = urunFiyatInput.value.replace(',', '.');
+    const fiyat = parseFloat(fiyatRaw);
 
     if (id) {
         // Güncelleme Modu
@@ -195,10 +198,19 @@ form.addEventListener('submit', (e) => {
             gosterToast(`"${ad}" başarıyla güncellendi.`, 'success');
         }
     } else {
-        // Ekleme Modu
-        const yeniId = envanter.length > 0 ? Math.max(...envanter.map(u => u.id)) + 1 : 1;
-        envanter.push({ id: yeniId, ad, kategori, adet, fiyat });
-        gosterToast(`"${ad}" envantere eklendi.`, 'success');
+        // Ekleme Modu: Aynı isimde başka bir ürün var mı kontrolü (Büyük/küçük harf duyarsız)
+        const mevcutUrun = envanter.find(u => u.ad.toLowerCase() === ad.toLowerCase());
+        
+        if (mevcutUrun) {
+            mevcutUrun.adet += adet;
+            mevcutUrun.fiyat = fiyat;
+            mevcutUrun.kategori = kategori;
+            gosterToast(`"${ad}" zaten envanterde vardı. Adedi artırıldı, fiyatı güncellendi.`, 'success');
+        } else {
+            const yeniId = envanter.length > 0 ? Math.max(...envanter.map(u => u.id)) + 1 : 1;
+            envanter.push({ id: yeniId, ad, kategori, adet, fiyat });
+            gosterToast(`"${ad}" envantere eklendi.`, 'success');
+        }
     }
 
     veriyiKaydet();
