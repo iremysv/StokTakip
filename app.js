@@ -61,8 +61,8 @@ function tabloyuCiz(filtreKategori = '') {
             <td class="text-right">${toplamDeger.toFixed(2)} TL</td>
             <td class="text-center" onclick="event.stopPropagation()">
                 <div class="action-buttons">
-                    <button class="btn btn-secondary" onclick="formuYukleById(${urun.id})">Düzenle</button>
-                    <button class="btn btn-danger" onclick="urunSil(${urun.id})">Sil</button>
+                    <button class="btn btn-secondary" onclick="event.stopPropagation(); formuYukleById(${urun.id})">Düzenle</button>
+                    <button class="btn btn-danger" onclick="event.stopPropagation(); urunSil(${urun.id})">Sil</button>
                 </div>
             </td>
         `;

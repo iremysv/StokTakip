@@ -74,13 +74,13 @@ class StokArayuzu:
         self.ent_fiyat.grid(row=3, column=1, pady=5, padx=5, sticky="ew")
         
         # Butonlar
-        btn_ekle = tk.Button(sol_panel, text="Ürün Ekle / Güncelle", bg="#2ecc71", fg="black", font=("Helvetica", 10, "bold"), command=self.ekle_veya_guncelle)
+        btn_ekle = tk.Button(sol_panel, text="Ürün Ekle / Güncelle", bg="#2ecc71", fg="white", font=("Helvetica", 10, "bold"), command=self.ekle_veya_guncelle)
         btn_ekle.grid(row=4, column=0, columnspan=2, pady=15, sticky="ew")
         
-        btn_sil = tk.Button(sol_panel, text="Seçili Ürünü Sil", bg="#e74c3c", fg="black", font=("Helvetica", 10, "bold"), command=self.seciliyi_sil)
+        btn_sil = tk.Button(sol_panel, text="Seçili Ürünü Sil", bg="#e74c3c", fg="white", font=("Helvetica", 10, "bold"), command=self.seciliyi_sil)
         btn_sil.grid(row=5, column=0, columnspan=2, pady=5, sticky="ew")
         
-        btn_temizle = tk.Button(sol_panel, text="Formu Temizle", bg="#95a5a6", fg="black", font=("Helvetica", 10), command=self.formu_temizle)
+        btn_temizle = tk.Button(sol_panel, text="Formu Temizle", bg="#95a5a6", fg="white", font=("Helvetica", 10), command=self.formu_temizle)
         btn_temizle.grid(row=6, column=0, columnspan=2, pady=5, sticky="ew")
         
         # Sağ Taraf: Tablo Listesi ve Arama
@@ -95,10 +95,10 @@ class StokArayuzu:
         self.ent_arama = tk.Entry(arama_cerceve, font=("Helvetica", 10), width=15)
         self.ent_arama.pack(side=tk.LEFT, padx=5)
         
-        btn_ara = tk.Button(arama_cerceve, text="Filtrele", bg="#3498db", fg="black", command=self.kategori_filtrele)
+        btn_ara = tk.Button(arama_cerceve, text="Filtrele", bg="#3498db", fg="white", command=self.kategori_filtrele)
         btn_ara.pack(side=tk.LEFT, padx=5)
         
-        btn_hepsi = tk.Button(arama_cerceve, text="Temizle", bg="#95a5a6", fg="black", command=self.tabloyu_guncelle)
+        btn_hepsi = tk.Button(arama_cerceve, text="Temizle", bg="#95a5a6", fg="white", command=self.tabloyu_guncelle)
         btn_hepsi.pack(side=tk.LEFT, padx=5)
         
         # Tablo Tasarımı (Treeview)
@@ -160,7 +160,7 @@ class StokArayuzu:
             messagebox.showwarning("Seçim Yapılmadı", "Lütfen silmek istediğiniz ürünü tablodan seçin.")
             return
             
-        degerler = self.tablo.item(secili_item, "values")
+        degerler = self.tablo.item(secili_item[0], "values")
         urun_adi = degerler[0]
         
         cevap = messagebox.askyesno("Silme Onayı", f"'{urun_adi}' ürününü silmek istediğinize emin misiniz?")
@@ -179,13 +179,12 @@ class StokArayuzu:
     def tablodan_sec(self, event):
         secili_item = self.tablo.selection()
         if secili_item:
-            degerler = self.tablo.item(secili_item, "values")
+            degerler = self.tablo.item(secili_item[0], "values")
             self.formu_temizle()
             self.ent_ad.insert(0, degerler[0])
             self.combo_kategori.set(degerler[1])
             self.ent_adet.insert(0, degerler[2])
-            # Fiyatı parse ederken küsuratları doğru yerleştirmek için
-            self.ent_fiyat.insert(0, degerler[3].replace(" TL", ""))
+            self.ent_fiyat.insert(0, degerler[3])
             
     def formu_temizle(self):
         self.ent_ad.delete(0, tk.END)
